@@ -6,4 +6,4 @@
     window.addEventListener("load", function () {
         ko.applyBindings(new CloudStoreViewModel());
     }, false);
-})(this, ko, i18n, ccs, PBCloud);
+})(this, ko);
