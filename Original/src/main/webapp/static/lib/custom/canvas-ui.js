@@ -3,7 +3,7 @@
 })(this, function(CanvasInitParams){
     var self = this;
     self.canvas = CanvasInitParams.element;
-    self.context = CanvasInitParams.context2D || self.getContext("2d");
+    self.context = CanvasInitParams.context2D || self.canvas.getContext("2d");
     self.pats = [];
     self.gradients = [];
     self.canvasStorage = [];
@@ -39,7 +39,7 @@
     // lighter【混合】| copy 【显示源图像。忽略目标图像】|xor 【使用异或操作对源图像与目标图像进行组合。】
     
     
-    //function
+    //function 
     
     //背景图像重叠
     self.setPattern = function(params){//预存pat背景，img要求是element
@@ -134,6 +134,18 @@
         self.context.restore();
     };
     
+    
+    self.stroke = function(){
+        self.context.lineWidth = self.lineWidth;
+        self.context.strokeStyle = self.strokeStyle;
+        self.context.stroke();
+    };
+    
+    self.fill = function(){
+        self.context.fillStyle = self.fillStyle;
+        self.context.fill();
+    };
+    
     //清空矩形区域
     self.clearRect = function (parmas) {
         var parmas = parmas || {};
@@ -154,7 +166,7 @@
         var x = params.x || 0, y = params.y || 0, width = params.width, height = params.height;
         if (width && height) {
             self.context.rect(x, y, width, height);
-            self.context.stroke();
+            self.stroke();
         }
     };
     
@@ -170,8 +182,7 @@
         for(var i= 1; i < lineArray.lenght; i++){
             self.context.lineTo(lineArray[i].x, lineArray[i].y);
         }
-        self.context.strokeStyle = self.strokeStyle;
-        self.context.stroke();
+        self.stroke();
     };
     
     self.polygon = function(lineArray){//多边形（多条线加闭合）
@@ -180,8 +191,7 @@
             self.context.lineTo(lineArray[i].x, lineArray[i].y);
         }
         self.context.closePath();
-        self.context.strokeStyle = self.strokeStyle;
-        self.context.stroke();
+        self.stroke();
     };
     
     
@@ -191,8 +201,7 @@
         var x2 = params.x2 || 0, y2 = params.y2;
         self.context.moveTo(x1, y1);
         self.context.quadraticCurveTo(x0,y0,x2,y2);
-        self.context.strokeStyle = self.strokeStyle;
-        self.context.stroke();
+        self.stroke();
     };
     
     self.bezierCurveTo = function(params){//四点曲线（三次贝塞尔曲线）
@@ -203,8 +212,7 @@
         
         self.context.moveTo(x1, y1);
         self.context.bezierCurveTo(x0,y0,z0,w0,x2,y2);
-        self.context.strokeStyle = self.strokeStyle;
-        self.context.stroke();
+        self.stroke();
     };
     
     function arcFunc(params){
@@ -214,16 +222,15 @@
         var ctx=self.context;
         ctx.beginPath();
         ctx.arc(x, y, r, startAngle * Math.PI, endAngle * Math.PI);
-        self.context.strokeStyle = self.strokeStyle;
     }
     
     self.arc = function(params){//圆形
         arcFunc(params);
-        self.context.stroke();
+        self.stroke();
     };
-    self.fullArc = function(params){//实心圆
+    self.fillArc = function(params){//实心圆
         arcFunc(params);
-        self.context.fill();
+        self.fill();
     };
     
     self.arcTo = function(params){//两点切线圆

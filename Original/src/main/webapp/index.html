@@ -12,16 +12,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
         <link rel="shortcut icon" href="static/app.ico"/>
         <link  href="static/css/packed-cc.css" rel="stylesheet" />
+        <link  href="static/bootstrap-4.0.0-dist/css/bootstrap.min.css" rel="stylesheet" />
         <!--lib-->
         <script src="static/lib/jquery.min.js"></script>
         <script src="static/lib/knockout-3.4.1.js"></script>
         <script src="static/lib/pulltorefresh.js"></script>
         <script src="static/lib/sammy.js"></script>
         <script src="static/lib/custom/canvas-ui.js"></script>
+        <script src="static/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
         <!--js-->
-        <script src="static/js/packed-app.js"></script>
         <script src="static/js/knockout-components.js"></script>
         <script src="static/js/knockout-utils.js"></script>
+        <script src="static/js/packed-app.js"></script>
         <title>Origin</title>
     </head>
     <body>
@@ -30,5 +32,12 @@
             你的IE版本太旧
         <![endif]-->
         <h1>Hello World!</h1>
+        <div data-bind="template:{ name: 'mianTemplate'}"></div>
+        <script id="mianTemplate" type="text/html">
+            <div>
+                <canvas height="400" width="400" data-bind="elementChangeCallback: {init: testCanvasInit}">
+                </canvas>
+            </div>
+        </script>
     </body>
 </html>
