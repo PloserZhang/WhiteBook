@@ -9,7 +9,7 @@
     self.canvasStorage = [];
     
     //attribute
-    self.fillStyle = CanvasInitParams.fullStyle;//context.fillStyle=color|gradient|pattern; 颜色 渐变 图 
+    self.fillStyle = CanvasInitParams.fillStyle;//context.fillStyle=color|gradient|pattern; 颜色 渐变 图 
     self.strokeStyle = CanvasInitParams.strokeStyle;//context.strokeStyle=color|gradient|pattern;
     self.shadowColor = CanvasInitParams.shadowColor;//color 
     self.shadowBlur = CanvasInitParams.shadowBlur;// shadow area
@@ -170,28 +170,37 @@
         }
     };
     
-    self.fullRect = function (params) {
+    self.fillRect = function (params) {
         var x = params.x || 0, y = params.y || 0, width = params.width, height = params.height;
         if (width && height) {
+            self.context.fillStyle = self.fillStyle;
             self.context.fillRect(x, y, width, height);
         }
     };
     
     self.setlines = function(lineArray){//多条线 lineArray obj = {x: 0,y: 0}
         self.context.moveTo(lineArray[0].x,lineArray[0].y);
-        for(var i= 1; i < lineArray.lenght; i++){
+        for(var i= 1; i < lineArray.length; i++){
             self.context.lineTo(lineArray[i].x, lineArray[i].y);
         }
         self.stroke();
     };
     
-    self.polygon = function(lineArray){//多边形（多条线加闭合）
+    function polygon(lineArray){
         self.context.moveTo(lineArray[0].x,lineArray[0].y);
-        for(var i= 1; i < lineArray.lenght; i++){
+        for(var i= 1; i < lineArray.length; i++){
             self.context.lineTo(lineArray[i].x, lineArray[i].y);
         }
         self.context.closePath();
+    }
+    
+    self.strokePolygon = function(lineArray){//多边形（多条线加闭合）
+        polygon(lineArray);
         self.stroke();
+    };
+    self.fillPolygon = function(lineArray){//多边形（多条线加闭合）
+        polygon(lineArray);
+        self.fill();
     };
     
     
@@ -199,19 +208,18 @@
         var x0 = params.x0 || 0, y0 = params.y0;
         var x1 = params.x1 || 0, y1 = params.y1;
         var x2 = params.x2 || 0, y2 = params.y2;
-        self.context.moveTo(x1, y1);
-        self.context.quadraticCurveTo(x0,y0,x2,y2);
+        self.context.moveTo(x0, y0);
+        self.context.quadraticCurveTo(x1,y1,x2,y2);
         self.stroke();
     };
     
     self.bezierCurveTo = function(params){//四点曲线（三次贝塞尔曲线）
         var x0 = params.x0 || 0, y0 = params.y0;
-        var z0 = params.z0 || 0, w0 = params.w0;
         var x1 = params.x1 || 0, y1 = params.y1;
         var x2 = params.x2 || 0, y2 = params.y2;
-        
-        self.context.moveTo(x1, y1);
-        self.context.bezierCurveTo(x0,y0,z0,w0,x2,y2);
+        var x3 = params.x3 || 0, y3 = params.y3;
+        self.context.moveTo(x0, y0);
+        self.context.bezierCurveTo(x1,y1,x2,y2,x3,y3);
         self.stroke();
     };
     
@@ -233,9 +241,11 @@
         self.fill();
     };
     
-    self.arcTo = function(params){//两点切线圆
-        var x1 = params.x1,y1 = params.y1,x2 = params.x2,y2 = params.y2,r = params.r;
-        self.context.fillRect(x1,y1,x2,y2,r);
+    self.arcTo = function(params){//两点切线圆  如果只要画弧线，需要x1-r = x0， x0 = x1 && y0 =y1 弧线不出现
+        var x0 = params.x0,y0 = params.y0,x1 = params.x1,y1 = params.y1,x2 = params.x2,y2 = params.y2,r = params.r;
+        self.context.moveTo(x0, y0);
+        self.context.arcTo(x1,y1,x2,y2,r);
+        self.stroke();
     };
     
     
