@@ -239,12 +239,35 @@
     };
     
     
-    self.drawImage = function (img, x,y) {//绘制图形
+    self.drawImage = function (img, x,y) {//绘制图像
         var img = img, x = x, y = y;
         img.onload = function(){//如果初次加载失败，重新加载
             self.context.drawImage(img, x, y);
         };
         self.context.drawImage(img, x, y);
+    };
+    
+    self.fillText = function (params) {
+        var text = params.text, x = params.x, y = params.y;
+        var ctx = self.context;
+        ctx.font = self.font;
+        ctx.textAlign = self.textAlign;
+        ctx.textBaseLine = self.textBaseLine;
+        ctx.fillText(text, x, y);
+    };
+    
+    self.strokeText = function (params) {
+        var text = params.text, x = params.x, y = params.y;
+        var ctx = self.context;
+        ctx.font = self.font;
+        ctx.textAlign = self.textAlign;
+        ctx.textBaseLine = self.textBaseLine;
+        ctx.strokeText(text, x, y);
+    };
+    
+    self.getTextWidth = function(text){
+        self.context.font = self.font;
+        self.context.measureText(text).width;
     };
     
     self.drawAndDealImage = function(params){//绘制图形，包含裁剪等
@@ -277,10 +300,6 @@
     self.getNewImageData = function(x,y){//data每四条数据为一个像素点，
         return self.context.createImageData(x,y);
     };
-    
-    
-    
-    
     
     self.checkPoint = function(x,y){
         return self.context.isPointInPath(x,y);
