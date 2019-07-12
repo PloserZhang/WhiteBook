@@ -1,27 +1,24 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!--
-        debug in weinre: https://git.alot.pw/weinre/
-        <script src="https://git.alot.pw/weinre/target/target-script-min.js#anonymous"></script>
-        -->
         <meta charset="utf-8"/>
         <meta name="renderer" content="webkit"/>
         <meta name="force-rendering" content="webkit"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"/>
         <link rel="shortcut icon" href="static/app.ico"/>
-        <link  href="static/css/packed-cc.css" rel="stylesheet" />
         <link  href="static/bootstrap-4.0.0-dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link  href="static/css/packed-cc.css" rel="stylesheet" />
         <!--lib-->
         <script src="static/lib/jquery.min.js"></script>
         <script src="static/lib/knockout-3.4.1.js"></script>
         <script src="static/lib/pulltorefresh.js"></script>
         <script src="static/lib/sammy.js"></script>
         <script src="static/lib/custom/canvas-ui.js"></script>
-        <script src="static/lib/custom/canvas-utils.js"></script>
+        <script src="static/bootstrap-4.0.0-dist/js/popper.js"></script>
         <script src="static/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
         <!--js-->
+        <script src="static/js/obj.js"></script>
+        <script src="static/lib/custom/canvas-utils.js"></script>
         <script src="static/js/knockout-components.js"></script>
         <script src="static/js/knockout-utils.js"></script>
         <script src="static/js/packed-app.js"></script>
@@ -29,9 +26,34 @@
     </head>
     <body>
         <span class="load_text">加载中...</span>
-        <div data-bind="template:{ name: 'mianTemplate'}"></div>
+        <div data-bind="template:{ name: MianTemplate}"></div>
         <script id="mianTemplate" type="text/html">
-            <h1>Hello World!</h1>
+            <div class="container">
+                <h1>Hello World!</h1>
+                <div class="alert alert-primary" role="alert">
+                    <a href="#imgSourceProcessor" class="alert-link"></a>
+                </div>
+            </div>
+        </script>
+        <script id="sourceProcessorTemplate" type="text/html">
+            <div class="container" data-bind="with: $data.imgProcessor">
+                <div class="row text-c">
+                    <h3>选择图片</h3>
+                    <div>
+                        <input type="file" accept="image/png, image/jpeg, image/gif, image/jpg" data-bind="event:{'change': function(){imgUpload($element)}}"/>
+                    </div>
+                </div>
+                <div class="row text-c">
+                    <div class="col-4">
+                        <img style="width: 100%;" data-bind="attr:{ src: imgSrc}"/>
+                    </div>
+                    <div class="col-8">
+                        <canvas width="400" height="600" data-bind="elementChangeCallback:{ init: canvasInit}"/>
+                    </div>
+                </div>
+            </div>
+            
+            
         </script>
     </body>
 </html>
