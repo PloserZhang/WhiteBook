@@ -19,6 +19,7 @@
         <script src="static/lib/pulltorefresh.js"></script>
         <script src="static/lib/sammy.js"></script>
         <script src="static/lib/custom/canvas-ui.js"></script>
+        <script src="static/lib/custom/canvas-utils.js"></script>
         <script src="static/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
         <!--js-->
         <script src="static/js/knockout-components.js"></script>
@@ -28,20 +29,9 @@
     </head>
     <body>
         <span class="load_text">加载中...</span>
-        <!--[if lte IE 10]>
-            你的IE版本太旧
-        <![endif]-->
-        <h1>Hello World!</h1>
         <div data-bind="template:{ name: 'mianTemplate'}"></div>
         <script id="mianTemplate" type="text/html">
-            <div>
-                <canvas height="400" width="400" data-bind="elementChangeCallback: {init: testCanvasInit}">
-                </canvas>
-            </div>
-            <div>
-                <canvas height="400" width="400" data-bind="elementChangeCallback: {init: canvasInit2}">
-                </canvas>
-            </div>
+            <h1>Hello World!</h1>
         </script>
     </body>
 </html>
