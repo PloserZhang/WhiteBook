@@ -146,6 +146,13 @@
         self.context.fill();
     };
     
+    self.clear = function(){//clearRect not clear
+//        self.context.clearRect(0, 0, self.context.width, self.context.height);
+        var width = self.canvas.width;
+        self.canvas.width = 0;
+        self.canvas.width = width;
+    };
+    
     //清空矩形区域
     self.clearRect = function (parmas) {
         var parmas = parmas || {};
@@ -248,14 +255,7 @@
         self.stroke();
     };
     
-    
-    self.drawImage = function (img, x,y) {//绘制图像
-        var img = img, x = x, y = y;
-        img.onload = function(){//如果初次加载失败，重新加载
-            self.context.drawImage(img, x, y);
-        };
-        self.context.drawImage(img, x, y);
-    };
+
     
     self.fillText = function (params) {
         var text = params.text, x = params.x, y = params.y;
@@ -278,6 +278,32 @@
     self.getTextWidth = function(text){
         self.context.font = self.font;
         self.context.measureText(text).width;
+    };
+    
+    self.drawImage = function(params){
+        var img = params.img, x = params.x, y = params.y;
+        var width = params.width, height = params.height;
+        if (!img){ return false;};// 图像数据为空
+        if(typeof img === "string"){//图像数据为base64字符串，需要处理
+            var image = document.createElement("img");
+            image.setAttribute("src",img);
+            image.onload = function(){
+                if(width && height){
+                    self.context.drawImage(image,x,y,width,height);
+                }else{
+                    if(image.width > self.canvas.width){
+                        self.context.drawImage(image,x,y,self.canvas.width,image.height*(self.canvas.width/image.width));
+                    }else{
+                        self.context.drawImage(image,x,y);
+                    }
+                }
+            };
+        }else if(width && height){
+            self.context.drawImage(img, x, y, width, height);
+        }else {
+            self.context.drawImage(img, x, y);
+        }
+        
     };
     
     self.drawAndDealImage = function(params){//绘制图形，包含裁剪等
@@ -304,7 +330,116 @@
     self.putImageData = function (params) {//将图片资源放入某个区域
         var imgData = params.imgData, x = params.x, y = params.y;
         var dirtyX = params.dirtyX, dirtyY = params.dirtyY, dirtyWidth = params.dirtyWidth, dirtyHeight = params.dirtyHeight;
-        self.context.putImageData(imgData,x,y,dirtyX,dirtyY,dirtyWidth,dirtyHeight);
+        if((dirtyX && dirtyY) || (dirtyWidth && dirtyHeight)){
+            self.context.putImageData(imgData,x,y,dirtyX,dirtyY,dirtyWidth,dirtyHeight);
+        }else{
+            self.context.putImageData(imgData,x,y);
+        }
+        
+    };
+    
+    function getReduceArray(imgDataArray,width){
+        var rowNum =  width*4;
+        var reduceArray = [];
+        for(var i =0; i< imgDataArray.length; i+=rowNum*2){
+            for(var j = 0; j< rowNum; j+=8){
+//                var px1 = {r: imgDataArray[j],b: imgDataArray[j+1],y:imgDataArray[j+2],z:imgDataArray[j+3]};
+//                var px2 = {r: imgDataArray[j+4],b: imgDataArray[j+5],y:imgDataArray[j+6],z:imgDataArray[j+7]};
+                var index = i+j;
+                var nextRowIndex = index+rowNum;
+               
+//                var px3 = {r: imgDataArray[nextRowIndex],b: imgDataArray[nextRowIndex+1],y:imgDataArray[nextRowIndex+2],z:imgDataArray[nextRowIndex+3]};
+//                var px4 = {r: imgDataArray[nextRowIndex+4],b: imgDataArray[nextRowIndex+5],y:imgDataArray[nextRowIndex+6],z:imgDataArray[nextRowIndex+7]};
+                
+                var r = (imgDataArray[index]+imgDataArray[index+4]+imgDataArray[nextRowIndex]+imgDataArray[nextRowIndex+4])/4;
+                var b = (imgDataArray[index+1]+imgDataArray[index+5]+imgDataArray[nextRowIndex+1]+imgDataArray[nextRowIndex+5])/4;
+                var y = (imgDataArray[index+2]+imgDataArray[index+6]+imgDataArray[nextRowIndex+2]+imgDataArray[nextRowIndex+6])/4;
+                var z = (imgDataArray[index+3]+imgDataArray[index+7]+imgDataArray[nextRowIndex+3]+imgDataArray[nextRowIndex+7])/4;
+                reduceArray.push(r);
+                reduceArray.push(b);
+                reduceArray.push(y);
+                reduceArray.push(z);
+            }
+        }
+        
+        return reduceArray;
+    };
+    
+    self.reduce = function(params){//need canvas's imageData obj
+        var imgData = params.imgData,reduce = params.reduce;
+        var height = imgData.height;
+        var width = imgData.width;
+        var dataArray = imgData.data;
+        for(var i = 0; i < reduce; i++){
+            dataArray = getReduceArray(dataArray, width);
+            width = width/2;
+            height = height/2;
+        }
+        var newImgData = self.context.createImageData(width,height);
+        for(var i = 0; i< dataArray.length; i++){
+            newImgData.data[i] = dataArray[i];
+        }
+        return newImgData;
+    };
+    
+    function getPixedArrayData(imgDataArray,width){
+        var rowNum =  width*4*2;
+        var reduceArray = [];
+        var rowIndex = 0;
+        var imgDataIndex =0;
+        reduceArray.length = imgDataArray.length * 4;
+        for(var i =0; i< reduceArray.length; i+=rowNum*2){
+            for(var j = 0; j< rowNum; j+=8){
+                var index = i+j;
+                var nextRowIndex = index+rowNum;
+                
+                var r = imgDataArray[imgDataIndex++];
+                var b = imgDataArray[imgDataIndex++];
+                var y = imgDataArray[imgDataIndex++];
+                var z = imgDataArray[imgDataIndex++];
+                
+                reduceArray[index] = r;
+                reduceArray[index+4]= r;
+                reduceArray[nextRowIndex] = r;
+                reduceArray[nextRowIndex+4] =r;
+                
+                reduceArray[index+1]= b;
+                reduceArray[index+5]= b;
+                reduceArray[nextRowIndex+1]= b;
+                reduceArray[nextRowIndex+5]= b;
+                
+                reduceArray[index+2] = y;
+                reduceArray[index+6] = y;
+                reduceArray[nextRowIndex+2] = y;
+                reduceArray[nextRowIndex+6] = y;
+                
+                reduceArray[index+3] =z;
+                reduceArray[index+7] =z;
+                reduceArray[nextRowIndex+3] =z;
+                reduceArray[nextRowIndex+7] =z;
+            }
+            rowIndex++;
+        }
+        return reduceArray;
+    };
+    
+    self.pixel = function(params){
+        var reduce = params.reduce;
+        var newImgData = self.reduce(params);
+        var width = newImgData.width;
+        var dataArray = [];
+        for(var i = 0;i < newImgData.data.length;i++){
+            dataArray.push(newImgData.data[i]);
+        }
+        for(var i = 0; i < reduce; i++){
+            dataArray = getPixedArrayData(dataArray, width);
+            width = width*2;
+        }
+        var newImgData2 = self.context.createImageData(params.imgData);
+        for(var i = 0; i< newImgData2.data.length; i++){
+            newImgData2.data[i] = dataArray[i];
+        }
+        return newImgData2;
     };
     
     self.getNewImageData = function(x,y){//data每四条数据为一个像素点，

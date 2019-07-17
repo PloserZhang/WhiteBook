@@ -19,11 +19,15 @@
             var dispose = params.dispose;
             
             window.setTimeout(function () {
-                initCallback(element);
+                if(initCallback){
+                    initCallback(element);
+                }
             }, 100);
             
             ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-                dispose();
+                if(dispose){
+                    dispose();
+                }
             });
             
         },

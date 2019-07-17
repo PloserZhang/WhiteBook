@@ -18,6 +18,75 @@
     function canvasUtil(){//一些进阶方法
         //function 
     }
+    
+    function CanvasImgSourceProcessor() {
+        var self = this;
+        self.imgSrc = ko.observable();
+        self.canvasImgData = ko.observable();
+        self.canvas = null;
+        self.canvas2 = null;
+        self.canvas3 = null;
+        self.imageWidth = ko.observable();
+        self.imageHeight = ko.observable();
+        self.reduce = ko.observable(0);
+        self.reduceImageData = ko.observable();
+
+        self.imgUpload = function (element) {
+            var reads = new FileReader();
+            reads.readAsDataURL(element.files[0]);
+            reads.onload = function (e) {
+                self.imgSrc(this.result);
+                self.canvas.clear();
+                self.canvas2.clear();
+                self.canvas.drawImage({img: this.result, x: 0, y: 0});
+                window.setTimeout(function () {
+                    self.imageWidth($(".sourceProcessorImg").width());
+                    self.imageHeight($(".sourceProcessorImg").height());
+                });
+            };
+        };
+
+        self.width = ko.observable(0);
+        self.height = ko.observable(0);
+        self.x = ko.observable(0);
+        self.y = ko.observable(0);
+
+        self.canvasInit = function (element) {
+            self.canvas = new CanvasUI({element: element, fillStyle: "#1E90FF", strokeStyle: "#1E90FF", lineWidth: 3});
+
+            ko.computed(function () {
+                if (self.width() && self.height()) {
+                    window.setTimeout(function () {
+                        var imgData = self.canvas.getImageData({x: self.x(), y: self.y(), width: self.width(), height: self.height()});
+                        self.canvas2.clear();
+                        self.canvasImgData(imgData);
+                        self.canvas2.putImageData({imgData: imgData, x: self.x(), y: self.y()});
+                    });
+                }
+                return self.x() && self.y() && self.width() && self.height();
+            });
+        };
+
+        self.canvasInit2 = function (element) {
+            self.canvas2 = new CanvasUI({element: element, fillStyle: "#1E90FF", strokeStyle: "#1E90FF", lineWidth: 3});
+        };
+        self.canvasInit3 = function (element) {
+            self.canvas3 = new CanvasUI({element: element, fillStyle: "#1E90FF", strokeStyle: "#1E90FF", lineWidth: 3});
+            ko.computed(function () {
+                var imgData = ko.unwrap(self.canvasImgData);
+                if (imgData) {
+                    var reduce = self.reduce() || 0;
+                    self.canvas3.clear();
+                    var redImgData = self.canvas3.pixel({imgData: imgData, reduce: reduce});
+                    self.canvas3.putImageData({imgData: redImgData, x: 0, y: 0, dirtyX: 0, dirtyY: 0, dirtyWidth: self.width(), dirtyHeight: self.height()});
+                    self.reduceImageData(redImgData);
+                }
+                return self.canvasImgData() && self.reduce();
+            });
+        };
+    }
+    ;
     global.canvasUtil = canvasUtil;
+    global.CanvasImgSourceProcessor = CanvasImgSourceProcessor;
 })(this);
 

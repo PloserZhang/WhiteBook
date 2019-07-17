@@ -25,19 +25,23 @@
         <title>Origin</title>
     </head>
     <body>
-        <span class="load_text">加载中...</span>
+        <div class="mtop-10" data-bind="template:{ name: titleTemplate}"></div>
         <div data-bind="template:{ name: MianTemplate}"></div>
         <script id="mianTemplate" type="text/html">
-            <div class="container">
+            <div class="container" data-bind="foreach: getMianMenus()">
+                <!-- ko ifnot: $index-->
                 <h1>Hello World!</h1>
+                <!-- /ko-->
+                <!-- ko if: $index-->
                 <div class="alert alert-primary" role="alert">
-                    <a href="#imgSourceProcessor" class="alert-link"></a>
+                    <a class="alert-link" data-bind="text: $data.text,attr:{href: $data.hash}"></a>
                 </div>
+                <!-- /ko-->
             </div>
         </script>
         <script id="sourceProcessorTemplate" type="text/html">
             <div class="container" data-bind="with: $data.imgProcessor">
-                <div class="row text-c">
+                <div class="row text-c mtop-10">
                     <h3>选择图片</h3>
                     <div>
                         <input type="file" accept="image/png, image/jpeg, image/gif, image/jpg" data-bind="event:{'change': function(){imgUpload($element)}}"/>
@@ -45,15 +49,57 @@
                 </div>
                 <div class="row text-c">
                     <div class="col-4">
-                        <img style="width: 100%;" data-bind="attr:{ src: imgSrc}"/>
+                        <span data-bind="text: 'widht: '+imageWidth()+';height: '+imageHeight()"></span>
+                        <img class="sourceProcessorImg" data-bind="attr:{ src: imgSrc}"/>
+                        <span class="title">调整显示</span>
+                        <div>
+                            <canvas width="400" height="600" data-bind="elementChangeCallback:{ init: canvasInit2}"/>
+                        </div>
+                        <span class="title">缩放显示</span>
+                        <div>
+                            <canvas width="400" height="600" data-bind="elementChangeCallback:{ init: canvasInit3}"/>
+                            <div data-bind="if: reduceImageData()&&reduceImageData().data">
+                                缩小后长度：<span data-bind="text: reduceImageData().data.length"></span>
+                                缩小后像素：<span data-bind="text: reduceImageData().data.length/4"></span>
+                                缩小后长：<span data-bind="text: reduceImageData().height"></span>
+                                缩小后宽：<span data-bind="text: reduceImageData().width"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-8">
+                    <div class="col-4" data-bind="if: canvasImgData()&&canvasImgData().data">
+                        长度：<span data-bind="text: canvasImgData().data.length"></span>
+                        像素：<span data-bind="text: canvasImgData().data.length/4"></span>
+                        <p data-bind="text: canvasImgData().data"></p>
+                    </div>
+                    <div class="col-4">
+                        x:<input type="number" data-bind="value: x"/><br />
+                        y:<input type="number" data-bind="value: y"/><br />
+                        width:<input type="number" data-bind="value: width"/><br />
+                        height:<input type="number" data-bind="value: height"/><br />
+                        缩小:<input type="number" data-bind="value: reduce"/><br />
+                        
+                        
                         <canvas width="400" height="600" data-bind="elementChangeCallback:{ init: canvasInit}"/>
                     </div>
                 </div>
             </div>
-            
+        </script>
+        <script id="animationTemplate" type="text/html">
             
         </script>
+        <script id="collisionTemplate" type="text/html">
+            
+        </script>
+        <script id="skillTemplate" type="text/html">
+            
+        </script>
+        <script id="mainTitleTemplate" type="text/html">
+            <div class="container-fluid" data-bind="foreach: getMianMenus()">
+                <a data-bind="attr:{href: $data.hash}">
+                    <button type="button" class="btn btn-primary" data-bind="text: $data.text">BACK</button>
+                </a>
+            </div>
+        </script>
+        
     </body>
 </html>

@@ -1,31 +1,19 @@
 (function (global, ko, $) {
     //main View Modal
-    function CanvasImgSourceProcessor(params){
-        var self = this;
-        var root = params.view;
-        self.imgSrc = ko.observable();
-        
-        self.imgUpload = function(element){
-            var reads = new FileReader();
-            reads.readAsDataURL(element.files[0]);
-            reads.onload = function (e) {
-                self.imgSrc(this.result);
-            };
-        };
-        self.canvasInit = function(){
-            
-        };
-    };
-    
     function CloudStoreViewModel() {
         var self = this;
         self.MianTemplate = ko.observable("mianTemplate");
-        self.imgProcessor = new CanvasImgSourceProcessor({view: self});
+        self.imgProcessor = new CanvasImgSourceProcessor();
         self.mainMenus = ko.observableArray([]);
+        self.titleTemplate = ko.observable("mainTitleTemplate");
         
         self.getMianMenus = ko.pureComputed(function(){
             if(!self.mainMenus().length){
-                self.mainMenus.push(new menuObj({text: "Img Source Processor", hash: "#imgSourceProcessor", type: menuObjEnum.normal}));
+                self.mainMenus.push(new menuObj({text: "BACK", hash: "#index", type: menuObjEnum.normal, template: "mianTemplate"}));
+                self.mainMenus.push(new menuObj({text: "IMG SOURCE PROCESSOR", hash: "#imgSourceProcessor", type: menuObjEnum.normal, template: "sourceProcessorTemplate"}));
+                self.mainMenus.push(new menuObj({text: "ANIMATION", hash: "#animation", type: menuObjEnum.normal,template: "animationTemplate" }));
+                self.mainMenus.push(new menuObj({text: "COLLISION TEST", hash: "#collision", type: menuObjEnum.normal,template: "collisionTemplate"}));
+                self.mainMenus.push(new menuObj({text: "SKILL", hash: "#skill", type: menuObjEnum.normal,template: "skillTemplate"}));
             }
             return self.mainMenus();
         });
@@ -33,13 +21,22 @@
     //sammy function
     function initSammy(global){
         var app = $.sammy(function () {
-            this.get('#/', function () {
+            this.get('#index', function () {
                 global.ViewModal.MianTemplate("mianTemplate");
-                
             });
             this.get('#imgSourceProcessor', function () {
                 global.ViewModal.MianTemplate("sourceProcessorTemplate");
             });
+            this.get('#animation', function () {
+                global.ViewModal.MianTemplate("animationTemplate");
+            });
+            this.get('#collision', function () {
+                global.ViewModal.MianTemplate("collisionTemplate");
+            });
+            this.get('#skill', function () {
+                global.ViewModal.MianTemplate("skillTemplate");
+            });
+            
         });
         app.run();
     };

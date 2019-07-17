@@ -18,3 +18,8 @@ div{ overflow: hidden;height: auto;font-size: 15px;}
 .load_text{ text-align: center;display: block;width: 100%;}
 .hidden{ display: none!important;}
 .text-c{ text-align: center;}
+.mleft-10{ margin-left: 10px;}
+.mleft-20{ margin-left: 20px;}
+.mtop-10{ margin-top: 10px;}
+.mtop-20{ margin-top: 20px;}
+p{ white-space: normal; word-break: break-all;}
