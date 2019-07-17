@@ -73,9 +73,9 @@
     };
     //普通渐变
     self.createLinearGradient = function (params) {
-        var x0 = params.x0 || 0, y0 = params.y0 || 0, x1 = params.x1 || 0, y1 = params.y1 || 0;
+        var x = params.x || 0, y = params.y || 0, x1 = params.x1 || 0, y1 = params.y1 || 0;
         var colorArray = params.colorArray;
-        var gradient = self.context.createLinearGradient(x0, y0, x1, y1);
+        var gradient = self.context.createLinearGradient(x, y, x1, y1);
         if (colorArray) {
             for (var i = 0; i < colorArray.length; i++) {
                 gradient.addColorStop(i / colorArray.length, colorArray[i]);

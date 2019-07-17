@@ -85,8 +85,64 @@
             });
         };
     }
-    ;
+    
+    function CanvasStarChain(){
+        var self = this;
+        
+        self.stars = ko.observableArray();
+        self.canvas = null;
+        
+        function starObj(x, y, xInc, yInc) {
+            this.x = x;
+            this.y = y;
+            this.xInc= xInc;
+            this.YInc = yInc;
+        }
+        
+        self.initStars = function(num){
+            var starNum = num || 30;
+            for(var i = 0; i < starNum; i++){
+                var x = Math.ceil(window.innerWidth*Math.random());
+                var y = Math.ceil(window.innerHeight*Math.random());
+                
+                var star = new starObj(x, y, (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10), (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10));
+                self.stars.push(star);
+            }
+        };
+        
+        self.end = function(num){
+            var starNum = num || Math.random()*10;
+            for(var i = 0; i< self.stars.length; i++){
+                var start = self.stars[0];
+                if(start.x < 0|| start.y < 0){
+                    self.stars.splice(new starObj(0, 0, (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10), (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10)));
+                }
+            }
+            for(var i = 0; i < starNum; i++){
+                self.stars.push(new starObj(0, 0, (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10), (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10)));
+            }
+        };
+        
+        function starHandler(time) {//time ms/step
+            
+            window.requestAnimationFrame(starHandler);
+        }
+        
+        self.start = function(){
+            window.requestAnimationFrame(starHandler);
+        };
+        
+        self.canvasInit = function(element){
+            element.width = window.innerWidth;
+            element.height = window.innerHeight;
+            self.canvas = new CanvasUI({element: element, fillStyle: "240, 255, 250", strokeStyle: "240, 255, 250", lineWidth: 1});
+            self.canvas.createLinearGradient({colorArray:["#4876FF","#262626"],x: 0,y: 0,x1: 0,y1: window.innerHeight});
+            self.canvas.fill()
+        };
+    }
+    
     global.canvasUtil = canvasUtil;
     global.CanvasImgSourceProcessor = CanvasImgSourceProcessor;
+    global.CanvasStarChain = CanvasStarChain;
 })(this);
 

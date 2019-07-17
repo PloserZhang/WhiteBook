@@ -14,6 +14,7 @@
                 self.mainMenus.push(new menuObj({text: "ANIMATION", hash: "#animation", type: menuObjEnum.normal,template: "animationTemplate" }));
                 self.mainMenus.push(new menuObj({text: "COLLISION TEST", hash: "#collision", type: menuObjEnum.normal,template: "collisionTemplate"}));
                 self.mainMenus.push(new menuObj({text: "SKILL", hash: "#skill", type: menuObjEnum.normal,template: "skillTemplate"}));
+                self.mainMenus.push(new menuObj({text: "STAR CHAIN", hash: "#starChain", type: menuObjEnum.normal,template: "starChainTemplate"}));
             }
             return self.mainMenus();
         });
@@ -35,6 +36,9 @@
             });
             this.get('#skill', function () {
                 global.ViewModal.MianTemplate("skillTemplate");
+            });
+            this.get('#starChain', function () {
+                global.ViewModal.MianTemplate("starChainTemplate");
             });
             
         });

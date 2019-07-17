@@ -93,6 +93,9 @@
         <script id="skillTemplate" type="text/html">
             
         </script>
+        <script id="starChainTemplate" type="text/html">
+            <canvas data-bind="elementChangeCallback:{ init: canvasInit}"/>
+        </script>
         <script id="mainTitleTemplate" type="text/html">
             <div class="container-fluid" data-bind="foreach: getMianMenus()">
                 <a data-bind="attr:{href: $data.hash}">
