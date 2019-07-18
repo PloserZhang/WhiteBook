@@ -94,7 +94,9 @@
             
         </script>
         <script id="starChainTemplate" type="text/html">
-            <canvas data-bind="elementChangeCallback:{ init: canvasInit}"/>
+            <div data-bind="with: $data.starChain">
+                <canvas data-bind="elementChangeCallback:{ init: canvasInit}"/>
+            </div>
         </script>
         <script id="mainTitleTemplate" type="text/html">
             <div class="container-fluid" data-bind="foreach: getMianMenus()">

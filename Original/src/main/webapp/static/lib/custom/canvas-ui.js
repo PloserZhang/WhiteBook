@@ -232,11 +232,11 @@
     
     function arcFunc(params){
         var x = params.x,y = params.y,r = params.r;
-        var startAngle = params.startAngle;//1代表180度
+        var startAngle = params.startAngle ||0;//1代表180度
         var endAngle = params.endAngle || 2;
         var ctx=self.context;
         ctx.beginPath();
-        ctx.arc(x, y, r, startAngle * Math.PI, endAngle * Math.PI);
+        ctx.arc(Math.ceil(x), Math.ceil(y), r, startAngle * Math.PI, endAngle * Math.PI);
     }
     
     self.arc = function(params){//圆形
@@ -244,7 +244,11 @@
         self.stroke();
     };
     self.fillArc = function(params){//实心圆
-        arcFunc(params);
+        var x = params.x,y = params.y,r = params.r;
+        var ctx=self.context;
+        ctx.beginPath();
+        ctx.arc(Math.ceil(x), Math.ceil(y), r, 0, 2 * Math.PI);
+        ctx.closePath();
         self.fill();
     };
     
@@ -323,6 +327,7 @@
     };
     
     self.getImageData = function(params){//获得固定位置的画布图像数据
+        var params = params || {};
         var x = params.x || 0, y = params.y || 0, width = params.width||self.canvas.width, height = params.height||self.canvas.height;
         return self.context.getImageData(x, y, width, height);
     };
@@ -365,7 +370,7 @@
         return reduceArray;
     };
     
-    self.reduce = function(params){//need canvas's imageData obj
+    self.reduce = function(params){//need canvas's imageData obj 缩放
         var imgData = params.imgData,reduce = params.reduce;
         var height = imgData.height;
         var width = imgData.width;

@@ -4,6 +4,7 @@
         var self = this;
         self.MianTemplate = ko.observable("mianTemplate");
         self.imgProcessor = new CanvasImgSourceProcessor();
+        self.starChain = new CanvasStarChain();
         self.mainMenus = ko.observableArray([]);
         self.titleTemplate = ko.observable("mainTitleTemplate");
         

@@ -91,54 +91,106 @@
         
         self.stars = ko.observableArray();
         self.canvas = null;
+        self.starChainStore = [];
+        self.lastTime = null;
         
         function starObj(x, y, xInc, yInc) {
             this.x = x;
             this.y = y;
             this.xInc= xInc;
             this.YInc = yInc;
+            this.color = "#F8F8FF";
+            this.size = Math.ceil( Math.random()*10);
         }
-        
-        self.initStars = function(num){
+        function getRandom(){
+            return Math.random() * 10 > 5 ? - Math.ceil(Math.random()) * 10 :Math.ceil( Math.random() * 10);
+        }
+        self.initStars = function(num, width, height){
             var starNum = num || 30;
             for(var i = 0; i < starNum; i++){
-                var x = Math.ceil(window.innerWidth*Math.random());
-                var y = Math.ceil(window.innerHeight*Math.random());
+                var x = Math.ceil(width*Math.random());
+                var y = Math.ceil(height*Math.random());
                 
-                var star = new starObj(x, y, (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10), (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10));
+                var star = new starObj(x, y, getRandom(), getRandom());
                 self.stars.push(star);
+            }
+            if(!self.canvas){
+                return;
+            }
+            self.canvas.fillStyle = self.canvas.createLinearGradient({colorArray:["#4876FF","#262626"],x: 0,y: 0,x1: 0,y1: window.innerHeight*2});
+            self.canvas.fillRect({x: 0,y: 0,width: window.innerWidth, height: window.innerHeight});
+            self.starChainStore[0] = {imgData: self.canvas.getImageData(), x: 0, y: 0};
+            self.startHandler();
+        };
+        
+        self.recover = function(){
+            self.canvas.clear();
+            for(var i = 0;i < self.starChainStore.length; i++){
+                self.canvas.putImageData(self.starChainStore[i]);
             }
         };
         
         self.end = function(num){
-            var starNum = num || Math.random()*10;
-            for(var i = 0; i< self.stars.length; i++){
-                var start = self.stars[0];
-                if(start.x < 0|| start.y < 0){
-                    self.stars.splice(new starObj(0, 0, (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10), (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10)));
+            num = num || 32;
+            for(var i = 0; i< self.stars().length; i++){
+                var start = self.stars()[i];
+                if(start.x <= 0|| start.y <= 0 || start.x > window.innerWidth || start.y > window.innerHeight || (start.xInc === 0 &&start.yInc ===0)){
+                    self.stars.splice(i,1);
                 }
             }
-            for(var i = 0; i < starNum; i++){
-                self.stars.push(new starObj(0, 0, (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10), (Math.random() * 10 > 5 ? -Math.random() * 10 : Math.random() * 10)));
+            if(self.stars().length < num){
+                for(var i = 0; i< (num - self.stars().length); i++){
+                    var x = Math.ceil( window.innerWidth * Math.random());
+                    var y = Math.ceil( window.innerHeight * Math.random());
+                    if(x > y){
+                        y = 0;
+                    }else{
+                        x = 0;
+                    }
+                    var star = new starObj(x, y, getRandom(), getRandom());
+                    self.stars.push(star);
+                }
             }
         };
         
-        function starHandler(time) {//time ms/step
+        self.startHandler = function (time) {//time ms/step
+            if(!time){
+                window.requestAnimationFrame(self.startHandler);
+                return;
+            }
+            if (!self.lastTIme) {
+                self.lastTIme = time;
+                window.requestAnimationFrame(self.startHandler);
+                return;
+            }
             
-            window.requestAnimationFrame(starHandler);
-        }
-        
-        self.start = function(){
-            window.requestAnimationFrame(starHandler);
+            var timeRatio =  time - self.lastTIme;
+            self.lastTIme = time;
+            self.end();
+            self.recover();
+            for(var i =0; i< self.stars().length;i++){
+                var star = self.stars()[i];
+                var xInc = Math.ceil(star.xInc/50*timeRatio);
+                var yInc = Math.ceil(star.YInc/50*timeRatio);
+                
+                star.x = xInc > 1 ? star.x + xInc: xInc < -1 ? star.x +xInc: star.x+1;
+                 star.y = yInc > 1 ? star.y + yInc: yInc < -1 ? star.y +xInc: star.y+1;
+                self.canvas.fillStyle = star.color;
+                self.canvas.fillArc({x: star.x, y: star.y, r: star.size});
+            }
+            window.requestAnimationFrame(self.startHandler);
         };
         
         self.canvasInit = function(element){
             element.width = window.innerWidth;
             element.height = window.innerHeight;
             self.canvas = new CanvasUI({element: element, fillStyle: "240, 255, 250", strokeStyle: "240, 255, 250", lineWidth: 1});
-            self.canvas.createLinearGradient({colorArray:["#4876FF","#262626"],x: 0,y: 0,x1: 0,y1: window.innerHeight});
-            self.canvas.fill()
+            self.initStars(0,element.width,element.height);
         };
+        
+        window.addEventListener("resize",function(){
+            self.canvasInit(self.canvas.canvas);
+        },false);
     }
     
     global.canvasUtil = canvasUtil;
