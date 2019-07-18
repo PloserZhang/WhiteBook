@@ -14,7 +14,7 @@
 
 }
 
-div{ overflow: hidden;height: auto;font-size: 15px;}
+div{height: auto;font-size: 15px;}
 .load_text{ text-align: center;display: block;width: 100%;}
 .hidden{ display: none!important;}
 .text-c{ text-align: center;}
@@ -22,4 +22,10 @@ div{ overflow: hidden;height: auto;font-size: 15px;}
 .mleft-20{ margin-left: 20px;}
 .mtop-10{ margin-top: 10px;}
 .mtop-20{ margin-top: 20px;}
+.dl{ float: left;}
+.dr{ float: right;}
 p{ white-space: normal; word-break: break-all;}
+.pointer{cursor: pointer;}
+
+.login-center{ position: relative;}
+.title{ overflow: visible;}

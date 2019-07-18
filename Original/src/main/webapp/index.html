@@ -26,85 +26,159 @@
     </head>
     <body>
         <div class="mtop-10" data-bind="template:{ name: titleTemplate}"></div>
-        <div data-bind="template:{ name: MianTemplate}"></div>
-        <script id="mianTemplate" type="text/html">
-            <div class="container" data-bind="foreach: getMianMenus()">
-                <!-- ko ifnot: $index-->
-                <h1>Hello World!</h1>
-                <!-- /ko-->
-                <!-- ko if: $index-->
-                <div class="alert alert-primary" role="alert">
-                    <a class="alert-link" data-bind="text: $data.text,attr:{href: $data.hash}"></a>
-                </div>
-                <!-- /ko-->
-            </div>
-        </script>
-        <script id="sourceProcessorTemplate" type="text/html">
-            <div class="container" data-bind="with: $data.imgProcessor">
-                <div class="row text-c mtop-10">
-                    <h3>选择图片</h3>
-                    <div>
-                        <input type="file" accept="image/png, image/jpeg, image/gif, image/jpg" data-bind="event:{'change': function(){imgUpload($element)}}"/>
+        <div data-bind="template:{ name: mainTemplate}"></div>
+        <script id="mainTemplate" type="text/html">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="card mb-3 col-12">
+                        <canvas class="card-img-top" data-bind="elementChangeCallback:{ init: titCardInit}"></canvas>
+                        <div class="card-body">
+                            <h1 class="card-title">华韵写作工作室</h1>
+                            <p class="card-text">剧本创作，短篇，中篇，长篇小说</p>
+                            <p class="card-text"><small class="text-muted">联系方式：QQ 1203869650</small></p>
+                            <p class="card-text"><small class="text-muted">群号：768911450</small></p>
+                        </div>
                     </div>
                 </div>
-                <div class="row text-c">
-                    <div class="col-4">
-                        <span data-bind="text: 'widht: '+imageWidth()+';height: '+imageHeight()"></span>
-                        <img class="sourceProcessorImg" data-bind="attr:{ src: imgSrc}"/>
-                        <span class="title">调整显示</span>
-                        <div>
-                            <canvas width="400" height="600" data-bind="elementChangeCallback:{ init: canvasInit2}"/>
-                        </div>
-                        <span class="title">缩放显示</span>
-                        <div>
-                            <canvas width="400" height="600" data-bind="elementChangeCallback:{ init: canvasInit3}"/>
-                            <div data-bind="if: reduceImageData()&&reduceImageData().data">
-                                缩小后长度：<span data-bind="text: reduceImageData().data.length"></span>
-                                缩小后像素：<span data-bind="text: reduceImageData().data.length/4"></span>
-                                缩小后长：<span data-bind="text: reduceImageData().height"></span>
-                                缩小后宽：<span data-bind="text: reduceImageData().width"></span>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="card text-white bg-info mb-3 pointer" data-bind="click: function(){ location.hash = '#novel'}">
+                            <div class="card-header">长篇组</div>
+                            <div class="card-body">
+                                <h5 class="card-title">组长：小a</h5>
+                                <p class="card-text">长篇小说，展示入口</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-4" data-bind="if: canvasImgData()&&canvasImgData().data">
-                        长度：<span data-bind="text: canvasImgData().data.length"></span>
-                        像素：<span data-bind="text: canvasImgData().data.length/4"></span>
-                        <p data-bind="text: canvasImgData().data"></p>
+                    <div class="col-3">
+                        <div class="card text-white bg-success mb-3 pointer" data-bind="click: function(){ location.hash = '#novelette'}">
+                            <div class="card-header">中篇组</div>
+                            <div class="card-body">
+                                <h5 class="card-title">组长：小b</h5>
+                                <p class="card-text">中篇小说，展示入口</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        x:<input type="number" data-bind="value: x"/><br />
-                        y:<input type="number" data-bind="value: y"/><br />
-                        width:<input type="number" data-bind="value: width"/><br />
-                        height:<input type="number" data-bind="value: height"/><br />
-                        缩小:<input type="number" data-bind="value: reduce"/><br />
-                        
-                        
-                        <canvas width="400" height="600" data-bind="elementChangeCallback:{ init: canvasInit}"/>
+                    <div class="col-3">
+                        <div class="card text-white bg-dark mb-3 pointer" data-bind="click: function(){ location.hash = '#story'}">
+                            <div class="card-header">短篇组</div>
+                            <div class="card-body">
+                                <h5 class="card-title">组长：小C</h5>
+                                <p class="card-text">短篇小说，展示入口</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="card text-white bg-warning  mb-3 pointer" data-bind="click: function(){ location.hash = '#script'}">
+                            <div class="card-header">剧本组</div>
+                            <div class="card-body">
+                                <h5 class="card-title">组长：小D</h5>
+                                <p class="card-text">剧本，展示入口</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </script>
-        <script id="animationTemplate" type="text/html">
-            
-        </script>
-        <script id="collisionTemplate" type="text/html">
-            
-        </script>
-        <script id="skillTemplate" type="text/html">
-            
-        </script>
-        <script id="starChainTemplate" type="text/html">
-            <div data-bind="with: $data.starChain">
-                <canvas data-bind="elementChangeCallback:{ init: canvasInit}"/>
+        <script id="loginTemplate" type="text/html">
+            <div class="container" data-bind="if: checkSession()">
+                
+            </div>
+            <div class="container-fluid" data-bind="ifnot: checkSession()">
+                <div class="row">
+                    <div class="col-12 login-center">
+                        <canvas data-bind="elementChangeCallback:{ init: loginCanvasInit, dispose: loginCanvasDispose}"></canvas>
+                    </div>
+                </div>
             </div>
         </script>
         <script id="mainTitleTemplate" type="text/html">
-            <div class="container-fluid" data-bind="foreach: getMianMenus()">
-                <a data-bind="attr:{href: $data.hash}">
-                    <button type="button" class="btn btn-primary" data-bind="text: $data.text">BACK</button>
-                </a>
+            <div class="container title">
+                <div class="row">
+                    <div class="col-6">
+                        <canvas data-bind="elementChangeCallback:{ init: logoCanvasInit}"></canvas>
+                    </div>
+                    <div class="col-6">
+                        <nav class="navbar navbar-light bg-light dr">
+                            <a class="navbar-brand" href="#"></a>
+                            <ul class="nav nav-pills">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#main" data-bind="visible: home() !== '#main'">返回</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#about">关于我们</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">阅文</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#novel">长篇</a>
+                                        <a class="dropdown-item" href="#novelette">中篇</a>
+                                        <a class="dropdown-item" href="#story">短篇</a>
+                                        <div role="separator" class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#script">剧本</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
             </div>
         </script>
-        
+        <script id="novelTemplate" type="text/html">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-4">长篇展示</h1>
+                    <p class="lead">按时间排序推荐工作室的长篇小说，可以预览和推荐</p>
+                    <hr class="my-4">
+                    <p>点击下方登录，进入工作区。可在线编辑和上传长篇小说（仅支持工作室人员进行登录）</p>
+                    <p class="lead dr">
+                        <a class="btn btn-primary btn-lg" href="#login" role="button">login</a>
+                    </p>
+                </div>
+            </div>
+        </script>
+        <script id="noveletteTemplate" type="text/html">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-4">中篇展示</h1>
+                    <p class="lead">按时间排序推荐工作室的长篇小说，可以预览和推荐</p>
+                    <hr class="my-4">
+                    <p>点击下方登录，进入工作区。可在线编辑和上传长篇小说（仅支持工作室人员进行登录）</p>
+                    <p class="lead dr">
+                        <a class="btn btn-primary btn-lg" href="#login" role="button">login</a>
+                    </p>
+                </div>
+            </div>
+        </script>
+        <script id="storyTemplate" type="text/html">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-4">短篇展示</h1>
+                    <p class="lead">按时间排序推荐工作室的长篇小说，可以预览和推荐</p>
+                    <hr class="my-4">
+                    <p>点击下方登录，进入工作区。可在线编辑和上传长篇小说（仅支持工作室人员进行登录）</p>
+                    <p class="lead dr">
+                        <a class="btn btn-primary btn-lg" href="#login" role="button">login</a>
+                    </p>
+                </div>
+            </div>
+        </script>
+        <script id="scriptTemplate" type="text/html">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-4">剧本展示</h1>
+                    <p class="lead">按时间排序推荐工作室的长篇小说，可以预览和推荐</p>
+                    <hr class="my-4">
+                    <p>点击下方登录，进入工作区。可在线编辑和上传长篇小说（仅支持工作室人员进行登录）</p>
+                    <p class="lead dr">
+                        <a class="btn btn-primary btn-lg" href="#login" role="button">login</a>
+                    </p>
+                </div>
+            </div>
+        </script>
+        <script id="aboutTemplate" type="text/html">
+            关于我们
+        </script>
     </body>
 </html>

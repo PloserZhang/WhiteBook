@@ -117,7 +117,7 @@
             if(!self.canvas){
                 return;
             }
-            self.canvas.fillStyle = self.canvas.createLinearGradient({colorArray:["#4876FF","#262626"],x: 0,y: 0,x1: 0,y1: window.innerHeight*2});
+            self.canvas.fillStyle = self.canvas.createLinearGradient({colorArray:["#00c1cd","#4792cd"],x: 0,y: 0,x1: 0,y1: window.innerHeight*2});
             self.canvas.fillRect({x: 0,y: 0,width: window.innerWidth, height: window.innerHeight});
             self.starChainStore[0] = {imgData: self.canvas.getImageData(), x: 0, y: 0};
             self.startHandler();
