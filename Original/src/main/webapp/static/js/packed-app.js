@@ -69,6 +69,9 @@
             this.get('#about', function () {
                 global.ViewModal.mainTemplate("aboutTemplate");
             });
+            this.get('#work', function () {
+                global.ViewModal.mainTemplate("aboutTemplate");
+            });
         });
         app.run();
     };
