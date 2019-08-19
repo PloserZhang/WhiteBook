@@ -193,8 +193,79 @@
         },false);
     }
     
+    function CustomImage(){
+        var self = this;
+        var canvas = null;
+        self.canvasInit = function(element){
+            var r = 45;
+            var x = 73;
+            var y = 73;
+            
+            canvas = new CanvasUI({element: element, fillStyle: "240, 255, 250", strokeStyle: "240, 255, 250", lineWidth: 1});
+            var background =  canvas.createLinearGradient({colorArray:["#23c0ff","#26fcff"],x: 0,y: 0,x1: 200,y1:0})
+            canvas.fillStyle = background;
+            canvas.fillArc({x: x,y: y, r: r});
+            canvas.fillStyle = "#ffffff";
+            
+            r = 44;
+            var ctx = canvas.context;
+            
+            var progress = 0.7;
+            var progressHeight = r * 2 * progress;
+            var width, angle, height, x1, y1, x2, y2, startAngle,endAngle ;//通过进度求得的两个坐标
+            
+            ctx.beginPath();
+            if (progressHeight > r) {
+                height = progressHeight - r;
+                width = Math.sqrt(r * r - Math.pow(height, 2));
+                angle = Math.abs(Math.atan2(height, width)) / Math.PI;
+                x1 = x -width;
+                x2 = x +width;
+                y1 = y - height;
+                y2 = y1;
+                startAngle =  1 + angle;
+                endAngle = 2 - angle;
+                
+            } else if (progressHeight === r) {
+                width = r;
+                x1 = x -r;
+                x2 = x +r;
+                y1 = y;
+                y2 = y1;
+                startAngle = 1 ;
+                endAngle = 2;
+            } else {
+                height = r - progressHeight;
+                width = Math.sqrt(r * r - Math.pow(height, 2));
+                angle = 0.5 - (Math.abs(Math.atan2(height, width)) / Math.PI);
+                x1 = x -width;
+                x2 = x +width;
+                y1 = y +height;
+                y2 = y1;
+                startAngle = 0.5 + angle;
+                endAngle = 2.5 - angle;
+            }
+            canvas.fillArc({x: x, y: y, r:r, startAngle: startAngle, endAngle: endAngle, isClockwise: false});
+
+            canvas.fillStyle = background;
+            canvas.strokeStyle = background;
+            
+            canvas.quadraticCurveTo({x0:x1, y0: y1, x1: x1 + width / 2, y1: y1-15, x2: x, y2: y2 ,isFill: true});
+            canvas.line({x: x,y: y1,x1:x1, y1: y1});
+            
+            canvas.fillStyle = "#ffffff";
+            canvas.strokeStyle = "#ffffff";
+            
+            canvas.quadraticCurveTo({x0:x, y0: y2, x1: x + width / 2, y1: y2+15, x2: x2, y2: y2 ,isFill: true});
+            canvas.line({x: x,y: y2,x1:x2, y1: y2});
+            
+            
+        };
+        
+    }
     global.canvasUtil = canvasUtil;
     global.CanvasImgSourceProcessor = CanvasImgSourceProcessor;
     global.CanvasStarChain = CanvasStarChain;
+    global.CustomImage = CustomImage;
 })(this);
 

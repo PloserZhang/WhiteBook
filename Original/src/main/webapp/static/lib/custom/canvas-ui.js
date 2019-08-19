@@ -185,6 +185,32 @@
         }
     };
     
+    //圆角矩形
+    self.roundedRect = function ( x, y, width, height, radius) {
+        var ctx = self.context;
+        ctx.beginPath();
+        ctx.moveTo(x, y + radius);
+        ctx.lineTo(x, y + height - radius);
+        ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+        ctx.lineTo(x + width - radius, y + height);
+        ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+        ctx.lineTo(x + width, y + radius);
+        ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+        ctx.lineTo(x + radius, y);
+        ctx.quadraticCurveTo(x, y, x, y + radius);
+        ctx.stroke();
+    };
+    
+    self.line = function(params){
+        var x = params.x,y = params.y, x1 = params.x1, y1 = params.y1;
+        var ctx = self.context;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x1, y1);
+        
+        self.stroke();
+    };
+    
     self.setlines = function(lineArray){//多条线 lineArray obj = {x: 0,y: 0}
         self.context.moveTo(lineArray[0].x,lineArray[0].y);
         for(var i= 1; i < lineArray.length; i++){
@@ -211,13 +237,20 @@
     };
     
     
-    self.quadraticCurveTo = function(params){//三点曲线（二次贝塞尔曲线）
+    self.quadraticCurveTo = function(params){//三点曲线（二次贝塞尔曲线） 
         var x0 = params.x0 || 0, y0 = params.y0;
         var x1 = params.x1 || 0, y1 = params.y1;
         var x2 = params.x2 || 0, y2 = params.y2;
+        var isFill = params.isFill;
+        self.context.beginPath();
         self.context.moveTo(x0, y0);
         self.context.quadraticCurveTo(x1,y1,x2,y2);
-        self.stroke();
+        if(isFill){
+            self.fill();
+        }else{
+            self.stroke();
+        }
+        
     };
     
     self.bezierCurveTo = function(params){//四点曲线（三次贝塞尔曲线）
@@ -225,18 +258,25 @@
         var x1 = params.x1 || 0, y1 = params.y1;
         var x2 = params.x2 || 0, y2 = params.y2;
         var x3 = params.x3 || 0, y3 = params.y3;
+        var isFill = params.isFill;
+        self.context.beginPath();
         self.context.moveTo(x0, y0);
         self.context.bezierCurveTo(x1,y1,x2,y2,x3,y3);
-        self.stroke();
+        if(isFill){
+            self.fill();
+        }else{
+            self.stroke();
+        }
     };
     
     function arcFunc(params){
         var x = params.x,y = params.y,r = params.r;
         var startAngle = params.startAngle ||0;//1代表180度
         var endAngle = params.endAngle || 2;
+        var isClockwise = params.isClockwise;
         var ctx=self.context;
         ctx.beginPath();
-        ctx.arc(Math.ceil(x), Math.ceil(y), r, startAngle * Math.PI, endAngle * Math.PI);
+        ctx.arc(x, y, r, startAngle * Math.PI, endAngle * Math.PI, isClockwise);
     }
     
     self.arc = function(params){//圆形
@@ -244,11 +284,7 @@
         self.stroke();
     };
     self.fillArc = function(params){//实心圆
-        var x = params.x,y = params.y,r = params.r;
-        var ctx=self.context;
-        ctx.beginPath();
-        ctx.arc(Math.ceil(x), Math.ceil(y), r, 0, 2 * Math.PI);
-        ctx.closePath();
+        arcFunc(params);
         self.fill();
     };
     
@@ -472,7 +508,7 @@
     };
     
     
-    
+   
 });
 
 

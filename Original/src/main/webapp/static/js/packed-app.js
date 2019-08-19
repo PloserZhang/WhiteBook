@@ -5,6 +5,7 @@
         self.MianTemplate = ko.observable("mianTemplate");
         self.imgProcessor = new CanvasImgSourceProcessor();
         self.starChain = new CanvasStarChain();
+        self.customImage = new CustomImage();
         self.mainMenus = ko.observableArray([]);
         self.titleTemplate = ko.observable("mainTitleTemplate");
         
@@ -16,6 +17,7 @@
                 self.mainMenus.push(new menuObj({text: "COLLISION TEST", hash: "#collision", type: menuObjEnum.normal,template: "collisionTemplate"}));
                 self.mainMenus.push(new menuObj({text: "SKILL", hash: "#skill", type: menuObjEnum.normal,template: "skillTemplate"}));
                 self.mainMenus.push(new menuObj({text: "STAR CHAIN", hash: "#starChain", type: menuObjEnum.normal,template: "starChainTemplate"}));
+                self.mainMenus.push(new menuObj({text: "CUSTOMIMAGE", hash: "#customImage", type: menuObjEnum.normal,template: "canvasCustomImage"}));
             }
             return self.mainMenus();
         });
@@ -40,6 +42,9 @@
             });
             this.get('#starChain', function () {
                 global.ViewModal.MianTemplate("starChainTemplate");
+            });
+            this.get("#customImage", function(){
+                global.ViewModal.MianTemplate("canvasCustomImage");
             });
             
         });

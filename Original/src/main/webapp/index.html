@@ -105,6 +105,10 @@
                 </a>
             </div>
         </script>
-        
+        <script id="canvasCustomImage" type="text/html">
+            <div data-bind="with: $data.customImage">
+                <canvas width="145" height="145" data-bind="elementChangeCallback:{ init: canvasInit}"></canvas>
+            </div>
+        </script>
     </body>
 </html>
