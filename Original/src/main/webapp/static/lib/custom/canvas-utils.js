@@ -202,7 +202,7 @@
             var y = 73;
             
             canvas = new CanvasUI({element: element, fillStyle: "240, 255, 250", strokeStyle: "240, 255, 250", lineWidth: 1});
-            var background =  canvas.createLinearGradient({colorArray:["#23c0ff","#26fcff"],x: 0,y: 0,x1: 200,y1:0})
+            var background =  canvas.createLinearGradient({colorArray:["#23c0ff","#26fcff"],x: 0,y: 0,x1: 200,y1:0});
             canvas.fillStyle = background;
             canvas.fillArc({x: x,y: y, r: r});
             canvas.fillStyle = "#ffffff";
@@ -259,6 +259,45 @@
             canvas.quadraticCurveTo({x0:x, y0: y2, x1: x + width / 2, y1: y2+15, x2: x2, y2: y2 ,isFill: true});
             canvas.line({x: x,y: y2,x1:x2, y1: y2});
             
+            
+        };
+        
+        self.canvasInit2 = function(element){
+            var progress = 0.5;
+            var height = 130 - 130*progress;
+            
+            var canvas2 = new CanvasUI({element: element});
+            canvas2.fillStyle = canvas2.createLinearGradient({colorArray:["#d7d8e4","#e5e6ee"],x: 0,y: 0,x1: -150,y1:140});
+            canvas2.fillPolygon([{x: 0, y: 10}, {x: 13, y: 20}, {x: 13, y: 140}, {x: 0, y: 130}]);
+            canvas2.fillStyle = canvas2.createLinearGradient({colorArray:["#dcdee8","#e9eaf1"],x: 0,y: 0,x1: 13,y1:260});
+            canvas2.fillPolygon([{x: 13, y: 20}, {x: 26, y: 10}, {x: 26, y: 130}, {x: 13, y: 140}]);
+            canvas2.fillStyle = canvas2.createLinearGradient({colorArray:["#e1e3eb","#dfe0ea"],x: 0,y: 0,x1: 26,y1:26});
+            canvas2.fillPolygon([{x: 0, y: 10}, {x: 13, y: 0}, {x: 26, y: 10}, {x: 13, y: 20}]);
+            
+            canvas2.fillStyle = canvas2.createLinearGradient({colorArray:["#ff3944","#ffa3a7"],x: 0,y: 0,x1: -150,y1:140});
+            canvas2.fillPolygon([{x: 0, y: 10+height}, {x: 13, y: 20+height}, {x: 13, y: 140}, {x: 0, y: 130}]);
+            
+            canvas2.fillStyle = canvas2.createLinearGradient({colorArray:["#ff5059","#ffebeb"],x: 0,y: 0,x1: 13,y1:260});
+            canvas2.fillPolygon([{x: 13, y: 20+height}, {x: 26, y: 10+height}, {x: 26, y: 130}, {x: 13, y: 140}]);
+            
+            canvas2.fillStyle = canvas2.createLinearGradient({colorArray:["#ffa2a4","#ff6268"],x: 0,y: 0,x1: 26,y1:26});
+            canvas2.fillPolygon([{x: 0, y: 10+height}, {x: 13, y: 0+height}, {x: 26, y: 10+height}, {x: 13, y: 20+height}]);
+        };
+        
+        self.canvasInit3 = function(element){
+            var x = 50;
+            var y = 50;
+            var r = 45;
+            var progress = 0.5;
+            var canvas3 = new CanvasUI({element: element, strokeStyle: "#dbe2ee",lineWidth: 1});
+            canvas3.arc({x: x, y: y, r:r, startAngle: 0.85, endAngle: 2.15, isClockwise: false});
+            canvas3.lineWidth = 6;
+            canvas3.arc({x: x, y: y, r:r-6, startAngle: 0.85, endAngle: 2.15, isClockwise: false});
+            canvas3.lineWidth = 1;
+            canvas3.strokeStyle = canvas3.createLinearGradient({colorArray:["#ff4656","#ff956e"],x: 0,y: 0,x1: 150,y1:0});
+            canvas3.arc({x: x, y: y, r:r, startAngle: 0.85, endAngle: 0.85+(2.15 - 0.85)*progress, isClockwise: false});
+            canvas3.lineWidth = 6;
+            canvas3.arc({x: x, y: y, r:r-6, startAngle: 0.85, endAngle: 0.85+(2.15 - 0.85)*progress, isClockwise: false});
             
         };
         

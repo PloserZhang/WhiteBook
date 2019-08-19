@@ -155,6 +155,7 @@
     
     //清空矩形区域
     self.clearRect = function (parmas) {
+        self.context.beginPath();
         var parmas = parmas || {};
         var x = parmas.x||0, y = parmas.y||0, width = parmas.width||self.canvas.width, height = parmas.height||self.canvas.height;
         self.context.clearRect(x, y, width, height);
@@ -170,6 +171,7 @@
     
     //标准图形
     self.rect = function (params) {
+        self.context.beginPath();
         var x = params.x || 0, y = params.y || 0, width = params.width, height = params.height;
         if (width && height) {
             self.context.rect(x, y, width, height);
@@ -178,6 +180,7 @@
     };
     
     self.fillRect = function (params) {
+        self.context.beginPath();
         var x = params.x || 0, y = params.y || 0, width = params.width, height = params.height;
         if (width && height) {
             self.context.fillStyle = self.fillStyle;
@@ -212,6 +215,7 @@
     };
     
     self.setlines = function(lineArray){//多条线 lineArray obj = {x: 0,y: 0}
+        self.context.beginPath();
         self.context.moveTo(lineArray[0].x,lineArray[0].y);
         for(var i= 1; i < lineArray.length; i++){
             self.context.lineTo(lineArray[i].x, lineArray[i].y);
@@ -220,6 +224,7 @@
     };
     
     function polygon(lineArray){
+        self.context.beginPath();
         self.context.moveTo(lineArray[0].x,lineArray[0].y);
         for(var i= 1; i < lineArray.length; i++){
             self.context.lineTo(lineArray[i].x, lineArray[i].y);
@@ -321,6 +326,7 @@
     };
     
     self.drawImage = function(params){
+        self.context.beginPath();
         var img = params.img, x = params.x, y = params.y;
         var width = params.width, height = params.height;
         if (!img){ return false;};// 图像数据为空
